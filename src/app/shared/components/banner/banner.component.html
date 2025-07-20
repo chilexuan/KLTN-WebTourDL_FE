@@ -1,0 +1,19 @@
+<div class="banner" [ngStyle]="{'background-image': 'url(' + bannerImage + ')'}">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="banner-content">
+        <h1>{{ title }}</h1>
+        @if (showBreadcrumbs) {
+        <div class="breadcrumbs">
+          <ul>
+            <li><a routerLink="/">Trang chủ</a></li>
+            @for (item of breadcrumbs; track item.label) {
+            <li><a [routerLink]="item.url">{{ item.label }}</a></li>
+            }
+            <li class="active">{{ title }}</li>
+          </ul>
+        </div>
+        }
+      </div>
+    </div>
+  </div>

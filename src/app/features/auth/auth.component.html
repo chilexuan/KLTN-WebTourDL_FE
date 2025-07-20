@@ -1,0 +1,154 @@
+<div class="container" id="container" [ngClass]="{'right-panel-active': isSignUp}">
+  <!-- Sign Up Form -->
+  <div class="form-container sign-up-container">
+    <form #signUpForm="ngForm" (ngSubmit)="onSignUp(signUpForm)">
+      <h1>Tạo Tài Khoản</h1>
+      @if (errorMessage && isSignUp) {
+        <div class="error-message">{{ errorMessage }}</div>
+      }
+      <div class="social-container">
+        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>hoặc sử dụng email để đăng ký</span>
+      <input
+        type="text"
+        placeholder="Họ và Tên"
+        [(ngModel)]="signUpData.username"
+        name="name"
+        required
+        #nameInput="ngModel"
+      />
+      @if (nameInput.invalid && (nameInput.dirty || nameInput.touched)) {
+        <div class="error-message">Họ và tên là bắt buộc</div>
+      }
+      <input
+        type="email"
+        placeholder="Email"
+        [(ngModel)]="signUpData.email"
+        name="email"
+        required
+        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+        #emailInput="ngModel"
+      />
+      @if (emailInput.invalid && (emailInput.dirty || emailInput.touched)) {
+        <div class="error-message">
+          @if (emailInput.errors?.['required']) { Email là bắt buộc }
+          @if (emailInput.errors?.['pattern']) { Email không hợp lệ }
+        </div>
+      }
+      <div class="password-container">
+        <input
+          [type]="showSignUpPassword ? 'text' : 'password'"
+          placeholder="Mật Khẩu"
+          [(ngModel)]="signUpData.password"
+          name="password"
+          required
+          minlength="6"
+          #passwordInput="ngModel"
+        />
+        <i
+          class="fas"
+          [ngClass]="showSignUpPassword ? 'fa-eye-slash' : 'fa-eye'"
+          (click)="togglePassword('signup')"
+        ></i>
+      </div>
+      @if (passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)) {
+        <div class="error-message">
+          @if (passwordInput.errors?.['required']) { Mật khẩu là bắt buộc }
+          @if (passwordInput.errors?.['minlength']) { Mật khẩu phải có ít nhất 6 ký tự }
+        </div>
+      }
+      <div class="password-container">
+        <input
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          placeholder="Xác Nhận Mật Khẩu"
+          [(ngModel)]="signUpData.confirmPassword"
+          name="confirmPassword"
+          required
+          #confirmPasswordInput="ngModel"
+        />
+        <i
+          class="fas"
+          [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"
+          (click)="togglePassword('confirm')"
+        ></i>
+      </div>
+      <button type="submit" [disabled]="isLoading || signUpForm.invalid">
+        {{ isLoading ? 'Đang đăng ký...' : 'Đăng Ký' }}
+      </button>
+      <a href="#" class="toggle-link" (click)="toggleForm($event)">Đã có tài khoản? Đăng Nhập</a>
+    </form>
+  </div>
+  <!-- Sign In Form -->
+  <div class="form-container sign-in-container">
+    <form #signInForm="ngForm" (ngSubmit)="onSignIn(signInForm)">
+      <h1>Đăng Nhập</h1>
+      @if (errorMessage && !isSignUp) {
+        <div class="error-message">{{ errorMessage }}</div>
+      }
+      <div class="social-container">
+        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>hoặc sử dụng tài khoản của bạn</span>
+      <input
+        type="text"
+        placeholder="Tên người dùng"
+        [(ngModel)]="signInData.username"
+        name="username"
+        required
+        #usernameInput="ngModel"
+      />
+      @if (usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)) {
+        <div class="error-message">
+          @if (usernameInput.errors?.['required']) { Tên người dùng là bắt buộc }
+        </div>
+      }
+      <div class="password-container">
+        <input
+          [type]="showSignInPassword ? 'text' : 'password'"
+          placeholder="Mật Khẩu"
+          [(ngModel)]="signInData.password"
+          name="password"
+          required
+          minlength="6"
+          #passwordInput="ngModel"
+        />
+        <i
+          class="fas"
+          [ngClass]="showSignInPassword ? 'fa-eye-slash' : 'fa-eye'"
+          (click)="togglePassword('signin')"
+        ></i>
+      </div>
+      @if (passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)) {
+        <div class="error-message">
+          @if (passwordInput.errors?.['required']) { Mật khẩu là bắt buộc }
+          @if (passwordInput.errors?.['minlength']) { Mật khẩu phải có ít nhất 6 ký tự }
+        </div>
+      }
+      <a href="#">Quên mật khẩu?</a>
+      <button type="submit" [disabled]="isLoading || signInForm.invalid">
+        {{ isLoading ? 'Đang đăng nhập...' : 'Đăng Nhập' }}
+      </button>
+      <a href="#" class="toggle-link" (click)="toggleForm($event)">Chưa có tài khoản? Đăng Ký</a>
+    </form>
+  </div>
+  <!-- Overlay -->
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>Chào Mừng Trở Lại!</h1>
+        <p>Để kết nối với chúng tôi, vui lòng đăng nhập bằng thông tin cá nhân của bạn</p>
+        <button class="ghost" (click)="toggleForm()">Đăng Nhập</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>Xin Chào!</h1>
+        <p>Nhập thông tin cá nhân của bạn và bắt đầu hành trình cùng chúng tôi</p>
+        <button class="ghost" (click)="toggleForm()">Đăng Ký</button>
+      </div>
+    </div>
+  </div>
+</div>

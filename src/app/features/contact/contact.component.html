@@ -1,0 +1,205 @@
+<div class="contact-page">
+  <!-- Hero Section -->
+  <section class="contact-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">Liên Hệ Với SafeTours</h1>
+      <p class="hero-subtitle">
+        Chúng tôi luôn sẵn sàng hỗ trợ bạn trong mọi chuyến đi
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Content -->
+  <section class="contact-content">
+    <div class="container">
+      <div class="row">
+        <!-- Contact Information -->
+        <div class="col-lg-4 col-md-6">
+          <div class="contact-info">
+            <h2 class="section-title">Thông Tin Liên Hệ</h2>
+            <p class="section-description">
+              Hãy liên hệ với SafeTours để được tư vấn và hỗ trợ tốt nhất cho chuyến du lịch của bạn.
+            </p>
+            
+            <div class="contact-items">
+              <div class="contact-item" *ngFor="let item of contactInfo">
+                <div class="contact-icon">
+                  <i [class]="item.icon"></i>
+                </div>
+                <div class="contact-details">
+                  <h4>{{ item.title }}</h4>
+                  <p *ngFor="let detail of item.details">{{ detail }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="social-media">
+              <h4>Theo dõi SafeTours</h4>
+              <div class="social-links">
+                <a href="#" class="social-link facebook">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-link instagram">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-link youtube">
+                  <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" class="social-link zalo">
+                  <i class="fas fa-comments"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-lg-8 col-md-6">
+          <div class="contact-form-wrapper">
+            <h2 class="section-title">Gửi Tin Nhắn Cho SafeTours</h2>
+            
+            <!-- Success Message -->
+            <div class="alert alert-success" *ngIf="submitSuccess">
+              <i class="fas fa-check-circle"></i>
+              Cảm ơn bạn đã liên hệ! SafeTours sẽ phản hồi trong thời gian sớm nhất.
+            </div>
+
+            <!-- Contact Form -->
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="name">Họ và tên *</label>
+                    <input
+                      type="text"
+                      id="name"
+                      formControlName="name"
+                      class="form-control"
+                      [class.is-invalid]="isFieldInvalid('name')"
+                      placeholder="Nhập họ và tên của bạn"
+                    >
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
+                      {{ getFieldError('name') }}
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input
+                      type="email"
+                      id="email"
+                      formControlName="email"
+                      class="form-control"
+                      [class.is-invalid]="isFieldInvalid('email')"
+                      placeholder="Nhập địa chỉ email"
+                    >
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+                      {{ getFieldError('email') }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="phone">Số điện thoại *</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      formControlName="phone"
+                      class="form-control"
+                      [class.is-invalid]="isFieldInvalid('phone')"
+                      placeholder="Nhập số điện thoại"
+                    >
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('phone')">
+                      {{ getFieldError('phone') }}
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="subject">Chủ đề *</label>
+                    <select
+                      id="subject"
+                      formControlName="subject"
+                      class="form-control"
+                      [class.is-invalid]="isFieldInvalid('subject')"
+                    >
+                      <option value="">Chọn chủ đề</option>
+                      <option value="booking">Đặt tour du lịch</option>
+                      <option value="consultation">Tư vấn du lịch</option>
+                      <option value="complaint">Khiếu nại dịch vụ</option>
+                      <option value="partnership">Hợp tác kinh doanh</option>
+                      <option value="other">Khác</option>
+                    </select>
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('subject')">
+                      {{ getFieldError('subject') }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Tin nhắn *</label>
+                <textarea
+                  id="message"
+                  formControlName="message"
+                  class="form-control"
+                  [class.is-invalid]="isFieldInvalid('message')"
+                  rows="6"
+                  placeholder="Nhập nội dung tin nhắn của bạn"
+                ></textarea>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('message')">
+                  {{ getFieldError('message') }}
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary btn-submit"
+                [disabled]="isSubmitting"
+              >
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!isSubmitting" class="fas fa-paper-plane me-2"></i>
+                {{ isSubmitting ? 'Đang gửi...' : 'Gửi tin nhắn' }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section -->
+  <section class="map-section">
+    <div class="container-fluid p-0">
+      <div class="map-wrapper">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3826.663826899757!2d107.59053261473894!3d16.467697228627944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3141a13e4a1b1c1f%3A0x1f0b8b7b8b8b8b8b!2zSHXhur8!5e0!3m2!1svi!2s!4v164teams1234567890!5m2!1svi!2s"
+          width="100%"
+          height="400"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div class="map-overlay">
+          <div class="map-info">
+            <h3>Văn phòng chính</h3>
+            <p>123 Đường Lê Lợi, Thành phố Huế, Thừa Thiên Huế</p>
+            <a href="#" class="btn btn-outline-white btn-sm">
+              <i class="fas fa-directions me-2"></i>
+              Chỉ đường
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

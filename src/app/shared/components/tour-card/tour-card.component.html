@@ -1,0 +1,37 @@
+<div class="tour-card">
+    <div class="tour-image">
+      <img [src]="tour.image" [alt]="tour.title">
+      <div class="tour-price">
+        <span>{{ tour.price | currency:'VND':'symbol':'1.0-0' }}</span>
+        <small>/người</small>
+      </div>
+      @if (tour.discount) {
+      <div class="tour-discount">
+        <span>-{{ tour.discount }}%</span>
+      </div>
+      }
+    </div>
+    <div class="tour-content">
+      <div class="tour-meta">
+        <span><i class="far fa-calendar"></i> {{ tour.duration }}</span>
+        <span><i class="fas fa-map-marker-alt"></i> {{ tour.location }}</span>
+      </div>
+      <h3 class="tour-title">
+        <a [routerLink]="['/tours', tour.id]">{{ tour.title }}</a>
+      </h3>
+      <div class="tour-rating">
+        <div class="stars">
+          @for (i of [1, 2, 3, 4, 5]; track i) {
+          <i class="fas fa-star" [class.filled]="i <= tour.rating"></i>
+          }
+        </div>
+        <span class="rating-count">({{ tour.reviewCount }} đánh giá)</span>
+      </div>
+      <div class="tour-footer">
+        <a [routerLink]="['/tours', tour.id]" class="book-now">Đặt Ngay</a>
+        <button class="favorite-btn" [class.active]="tour.isFavorite" (click)="toggleFavorite()">
+          <i class="fas fa-heart"></i>
+        </button>
+      </div>
+    </div>
+  </div>

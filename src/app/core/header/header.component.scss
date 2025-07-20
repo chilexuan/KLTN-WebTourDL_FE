@@ -1,0 +1,469 @@
+// header.component.scss
+.header {
+  width: 100%;
+  z-index: 100;
+  background-color: #fff;
+  transition: all 0.3s ease;
+
+  // Khi header trở thành sticky
+  &.sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: slideDown 0.3s ease;
+
+    // Ẩn header-top khi sticky để tiết kiệm không gian
+    .header-top {
+      display: none;
+    }
+
+    .header-main {
+      padding: 12px 0; // Giảm padding khi sticky
+    }
+
+    .logo a {
+      font-size: 24px; // Nhỏ hơn khi sticky
+    }
+  }
+
+  &-top {
+    background-color: #1e3d59;
+    padding: 10px 0;
+    color: #fff;
+
+    &-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-contact-info {
+      display: flex;
+      gap: 20px;
+
+      a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        transition: color 0.3s ease;
+
+        i {
+          margin-right: 5px;
+        }
+
+        &:hover {
+          color: #f5b841;
+        }
+      }
+    }
+
+    .header-social {
+      display: flex;
+      gap: 15px;
+
+      a {
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #f5b841;
+        }
+      }
+    }
+  }
+
+  &-main {
+    background-color: #fff;
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: padding 0.3s ease;
+
+    &-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      a {
+        font-size: 28px;
+        font-weight: 700;
+        text-decoration: none;
+        color: #1e3d59;
+        transition: font-size 0.3s ease;
+
+        span {
+          color: #f5b841;
+        }
+      }
+    }
+
+    .main-nav {
+      .nav-list {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          margin: 0 15px;
+
+          a {
+            text-decoration: none;
+            color: #1e3d59;
+            font-weight: 500;
+            position: relative;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+
+            &:after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 0;
+              height: 2px;
+              background-color: #f5b841;
+              transition: width 0.3s ease;
+            }
+
+            &:hover,
+            &.active {
+              color: #f5b841;
+
+              &:after {
+                width: 100%;
+              }
+            }
+          }
+
+          &.user-menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            .user-dropdown {
+              display: flex;
+              align-items: center;
+              cursor: pointer;
+              padding: 8px 12px;
+              border-radius: 4px;
+              transition: background-color 0.3s ease;
+
+              &:hover {
+                background-color: #f5f6f5;
+              }
+
+              .username {
+                margin-right: 8px;
+                font-weight: 500;
+                color: #1e3d59;
+              }
+
+              .fa-caret-down {
+                font-size: 12px;
+                color: #1e3d59;
+              }
+            }
+
+            .dropdown-menu {
+              display: none;
+              position: absolute;
+              top: 100%;
+              right: 0;
+              background-color: #fff;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              border-radius: 4px;
+              min-width: 150px;
+              z-index: 1000;
+              padding: 8px 0;
+
+              &.active {
+                display: block;
+              }
+
+              a,
+              button {
+                display: block;
+                width: 100%;
+                padding: 8px 16px;
+                text-align: left;
+                border: none;
+                background: none;
+                cursor: pointer;
+                font-size: 14px;
+                color: #1e3d59;
+                text-decoration: none;
+
+                &:hover {
+                  background-color: #f5f6f5;
+                }
+              }
+
+              .logout-btn {
+                color: #e74c3c; // Màu đỏ cho nút đăng xuất
+              }
+            }
+          }
+        }
+      }
+
+      &.mobile-nav-active {
+        position: fixed;
+        top: 0;
+        right: -280px;
+        width: 280px;
+        height: 100vh;
+        background-color: #fff;
+        padding: 80px 20px 30px;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s ease;
+        z-index: 99;
+
+        &.mobile-nav-active {
+          right: 0;
+        }
+
+        .nav-list {
+          flex-direction: column;
+          gap: 15px;
+
+          li {
+            margin: 0;
+
+            a {
+              display: block;
+              padding: 10px 0;
+            }
+
+            &.user-menu {
+              flex-direction: column;
+              align-items: flex-start;
+              padding: 10px 0;
+              border-top: 1px solid #eee;
+              margin-top: 10px;
+
+              .user-dropdown {
+                width: 100%;
+                padding: 10px;
+                background: none;
+
+                &:hover {
+                  background: #f5f6f5;
+                }
+
+                .username {
+                  margin-right: 8px;
+                }
+              }
+
+              .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                width: 100%;
+                background-color: transparent;
+                padding: 0;
+
+                &.active {
+                  display: flex;
+                  flex-direction: column;
+                }
+
+                a,
+                button {
+                  padding: 10px;
+                  text-align: center;
+                  color: #1e3d59;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        font-size: 18px;
+        color: #1e3d59;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #f5b841;
+        }
+      }
+
+      .mobile-menu-btn {
+        display: none;
+      }
+    }
+  }
+}
+
+// Animation cho sticky header
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Mobile overlay
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 98;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+// Media queries for responsive design
+@media (max-width: 991px) {
+  .header {
+    &-main {
+      .main-nav {
+        position: fixed;
+        top: 0;
+        right: -280px;
+        width: 280px;
+        height: 100vh;
+        background-color: #fff;
+        padding: 80px 20px 30px;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s ease;
+        z-index: 99;
+
+        &.mobile-nav-active {
+          right: 0;
+        }
+
+        .nav-list {
+          flex-direction: column;
+          gap: 15px;
+
+          li {
+            margin: 0;
+
+            a {
+              display: block;
+              padding: 10px 0;
+            }
+
+            &.user-menu {
+              flex-direction: column;
+              align-items: flex-start;
+              padding: 10px 0;
+              border-top: 1px solid #eee;
+              margin-top: 10px;
+
+              .user-dropdown {
+                width: 100%;
+                padding: 10px;
+                background: none;
+
+                &:hover {
+                  background: #f5f6f5;
+                }
+
+                .username {
+                  margin-right: 8px;
+                }
+              }
+
+              .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                width: 100%;
+                background-color: transparent;
+                padding: 0;
+
+                &.active {
+                  display: flex;
+                  flex-direction: column;
+                }
+
+                a,
+                button {
+                  padding: 10px;
+                  text-align: center;
+                  color: #1e3d59;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .header-actions {
+        .mobile-menu-btn {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .header {
+    &-top {
+      &-content {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .header-contact-info {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+      }
+
+      .header-social {
+        justify-content: center;
+      }
+    }
+
+    &.sticky {
+      .header-main {
+        padding: 10px 0;
+      }
+
+      .logo a {
+        font-size: 22px;
+      }
+    }
+  }
+}

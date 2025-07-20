@@ -1,0 +1,23 @@
+<div class="newsletter" [ngStyle]="{'background-image': 'url(' + backgroundImage + ')'}">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="newsletter-content">
+        <div class="newsletter-header">
+          <h2>Đăng ký nhận tin</h2>
+          <p>Hãy đăng ký để nhận những thông tin mới nhất về các tour du lịch và ưu đãi hấp dẫn!</p>
+        </div>
+        <form class="newsletter-form" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <input 
+              type="email" 
+              placeholder="Email của bạn" 
+              [(ngModel)]="email" 
+              name="email" 
+              required
+            >
+            <button type="submit">Đăng ký</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

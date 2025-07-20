@@ -1,0 +1,22 @@
+<div class="testimonial">
+    <div class="testimonial-content">
+      <div class="quote-icon">
+        <i class="fas fa-quote-left"></i>
+      </div>
+      <p class="testimonial-text">{{ testimonial.content }}</p>
+      <div class="testimonial-rating">
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+        <i class="fas fa-star" [class.filled]="i <= testimonial.rating"></i>
+        }
+      </div>
+    </div>
+    <div class="testimonial-author">
+      <div class="author-image">
+        <img [src]="testimonial.avatar" [alt]="testimonial.name">
+      </div>
+      <div class="author-info">
+        <h4>{{ testimonial.name }}</h4>
+        <p>{{ testimonial.location }}</p>
+      </div>
+    </div>
+  </div>

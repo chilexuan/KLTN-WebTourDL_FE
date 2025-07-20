@@ -1,0 +1,74 @@
+<!-- header.component.html -->
+<header class="header" [class.sticky]="isSticky">
+  <div class="header-top">
+    <div class="container">
+      <div class="header-top-content">
+        <div class="header-contact-info">
+          <a href="tel:+123456789"><i class="fas fa-phone-alt"></i> +123 456 789</a>
+          <a href="mailto:info@safetours.com"><i class="fas fa-envelope"></i> infosafetours.com</a>
+        </div>
+        <div class="header-social">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-main">
+    <div class="container">
+      <div class="header-main-content">
+        <div class="logo">
+          <a routerLink="/">
+            <span>Safe</span>Tours
+          </a>
+        </div>
+        <nav class="main-nav" [class.mobile-nav-active]="mobileMenuOpen">
+          <ul class="nav-list">
+            <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Trang chủ</a></li>
+            <li><a routerLink="/tours" routerLinkActive="active">Tours</a></li>
+            <li><a routerLink="/destinations" routerLinkActive="active">Điểm đến</a></li>
+            <li><a routerLink="/about" routerLinkActive="active">Giới thiệu</a></li>
+            <li><a routerLink="/blog" routerLinkActive="active">Blog</a></li>
+            <li><a routerLink="/contact" routerLinkActive="active">Liên hệ</a></li>
+                
+            @if (!authService.isLoggedIn()) {
+              <li>
+                <a routerLink="/auth" [queryParams]="{ mode: 'signin' }" class="auth-icon" title="Đăng nhập/Đăng ký">
+                  <i class="fas fa-user"></i>
+                </a>
+              </li>
+            } @else {
+              <li class="user-menu">
+        <div class="user-dropdown" (click)="toggleUserDropdown()">
+          <span class="username">{{ authService.getCurrentUser()?.username || 'User' }}</span>
+          <i class="fas fa-caret-down"></i>
+        </div>
+        <div class="dropdown-menu" [class.active]="isUserDropdownOpen">
+          @if (authService.isAdmin()) {
+            <a routerLink="/admin" (click)="closeUserDropdown()">Quản trị</a>
+          }
+          <a routerLink="/user-profile" (click)="closeUserDropdown()">Đổi thông tin</a>
+          <button class="logout-btn" (click)="logout(); closeUserDropdown()">Đăng xuất</button>
+        </div>
+      </li>
+            }
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <button class="search-btn">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+            <i class="fas" [ngClass]="{'fa-bars': !mobileMenuOpen, 'fa-times': mobileMenuOpen}"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-overlay" 
+     [class.active]="mobileMenuOpen" 
+     (click)="toggleMobileMenu()"></div>

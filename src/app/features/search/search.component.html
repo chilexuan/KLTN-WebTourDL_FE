@@ -1,0 +1,23 @@
+<!-- src/app/features/search/search.component.html -->
+<div class="search-container">
+  <h2>Tìm kiếm bài viết</h2>
+  <div class="search-form">
+    <input
+      type="text"
+      [(ngModel)]="keyword"
+      placeholder="Nhập từ khóa..."
+      (keyup.enter)="onSearch()"
+    />
+    <button (click)="onSearch()">Tìm kiếm</button>
+  </div>
+  <div class="search-results" *ngIf="searchResults.length > 0">
+    <h3>Kết quả tìm kiếm ({{ searchResults.length }} bài viết)</h3>
+    <ul>
+      <li *ngFor="let article of searchResults">
+        <a [routerLink]="['/articles', article.id]">{{ article.title }}</a>
+        <p>{{ article.content.substring(0, 100) }}...</p>
+      </li>
+    </ul>
+  </div>
+  <p *ngIf="searchResults.length === 0 && keyword">Không tìm thấy kết quả.</p>
+</div>

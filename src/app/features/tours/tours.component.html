@@ -1,0 +1,241 @@
+<div class="container">
+    <!-- Header -->
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Khám Phá Việt Nam Cùng Chúng Tôi</h1>
+        <p>Trải nghiệm những chuyến du lịch tuyệt vời với dịch vụ chuyên nghiệp</p>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <form class="search-form" (ngSubmit)="searchTours()">
+            <div class="form-group">
+                <label for="destination">Điểm đến</label>
+                <select id="destination" [(ngModel)]="searchParams.destination" name="destination">
+                    <option value="">Chọn điểm đến</option>
+                    <option value="hanoi">Hà Nội</option>
+                    <option value="saigon">TP. Hồ Chí Minh</option>
+                    <option value="danang">Đà Nẵng</option>
+                    <option value="halong">Hạ Long</option>
+                    <option value="dalat">Đà Lạt</option>
+                    <option value="phuquoc">Phú Quốc</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="departure">Ngày khởi hành</label>
+                <input type="date" id="departure" [(ngModel)]="searchParams.departure" name="departure">
+            </div>
+            <div class="form-group">
+                <label for="guests">Số khách</label>
+                <select id="guests" [(ngModel)]="searchParams.guests" name="guests">
+                    <option value="1">1 người</option>
+                    <option value="2">2 người</option>
+                    <option value="3">3 người</option>
+                    <option value="4">4 người</option>
+                    <option value="5+">5+ người</option>
+                </select>
+            </div>
+            <button type="submit" class="search-btn">
+                <i class="fas fa-search"></i> Tìm kiếm
+            </button>
+        </form>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h2 class="section-title">Tour Du Lịch Nổi Bật</h2>
+
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="sort">Sắp xếp:</label>
+                <select id="sort" [(ngModel)]="sortBy" (ngModelChange)="sortTours()">
+                    <option value="popular">Phổ biến</option>
+                    <option value="price-low">Giá thấp đến cao</option>
+                    <option value="price-high">Giá cao đến thấp</option>
+                    <option value="rating">Đánh giá cao</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="duration">Thời gian:</label>
+                <select id="duration" [(ngModel)]="filterParams.duration" (ngModelChange)="filterTours()">
+                    <option value="">Tất cả</option>
+                    <option value="1-3">1-3 ngày</option>
+                    <option value="4-7">4-7 ngày</option>
+                    <option value="7+">Trên 7 ngày</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="price-range">Giá:</label>
+                <select id="price-range" [(ngModel)]="filterParams.priceRange" (ngModelChange)="filterTours()">
+                    <option value="">Tất cả</option>
+                    <option value="0-5000000">Dưới 5 triệu</option>
+                    <option value="5000000-10000000">5-10 triệu</option>
+                    <option value="10000000+">Trên 10 triệu</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tours Grid -->
+        <div class="tours-grid">
+            <div class="tour-card" *ngFor="let tour of currentTours" (click)="openTourDetail(tour)">
+                <div class="tour-image">
+                    <img [src]="tour.image" [alt]="tour.title">
+                    <div class="tour-price">
+                        <span>{{ formatPrice(tour.discount ? tour.price * (1 - tour.discount / 100) : tour.price) }}</span>
+                        <small>/người</small>
+                    </div>
+                    <div class="tour-discount" *ngIf="tour.discount"><span>-{{tour.discount}}%</span></div>
+                </div>
+                <div class="tour-content">
+                    <div class="tour-meta">
+                        <span><i class="far fa-calendar"></i> {{tour.duration}}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> {{tour.location}}</span>
+                    </div>
+                    <h3 class="tour-title">{{tour.title}}</h3>
+                    <div class="tour-description">{{tour.description}}</div>
+                    <div class="tour-rating">
+                        <div class="stars">
+                            <i class="fas fa-star" [ngClass]="{'filled': i <= tour.rating}" *ngFor="let i of [1,2,3,4,5]"></i>
+                        </div>
+                        <span class="rating-count">({{tour.reviewCount}} đánh giá)</span>
+                    </div>
+                    <div class="tour-footer">
+                        <button class="book-now" (click)="openTourDetail(tour); $event.stopPropagation()">Đặt Ngay</button>
+                        <button class="favorite-btn" [ngClass]="{'active': tour.isFavorite}" (click)="toggleFavorite(tour.id); $event.stopPropagation()">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Tour Detail Modal -->
+    <div class="modal" [ngClass]="{'active': showModal}" (click)="closeModal($event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img [src]="selectedTour?.image" [alt]="selectedTour?.title">
+                <button class="modal-close" (click)="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">{{selectedTour?.title}}</h2>
+                
+                <div class="modal-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="meta-text">
+                            <div class="meta-label">Điểm đến</div>
+                            <div class="meta-value">{{selectedTour?.location}}</div>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <i class="far fa-calendar"></i>
+                        <div class="meta-text">
+                            <div class="meta-label">Thời gian</div>
+                            <div class="meta-value">{{selectedTour?.duration}}</div>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-star"></i>
+                        <div class="meta-text">
+                            <div class="meta-label">Đánh giá</div>
+                            <div class="meta-value">{{selectedTour?.rating}}/5 ({{selectedTour?.reviewCount}} lượt)</div>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-tag"></i>
+                        <div class="meta-text">
+                            <div class="meta-label">Giá tour</div>
+                            <div class="meta-value">
+                                {{ selectedTour ? formatPrice(selectedTour.discount ? selectedTour.price * (1 - selectedTour.discount / 100) : selectedTour.price) : '0₫' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tour-details">
+                    <h3>Mô tả tour</h3>
+                    <p>{{selectedTour?.description}}</p>
+                </div>
+
+                <div class="itinerary">
+                    <h3>Lịch trình tour</h3>
+                    <div class="itinerary-item" *ngFor="let item of selectedTour?.itinerary">
+                        <div class="day-number">{{item.day}}</div>
+                        <div class="day-content">
+                            <h4>{{item.title}}</h4>
+                            <p>{{item.description}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-section">
+                    <h3>Đặt tour ngay</h3>
+                    <form class="booking-form" (ngSubmit)="submitBooking()">
+                        <div class="form-group">
+                            <label for="booking-name">Họ và tên</label>
+                            <input type="text" id="booking-name" [(ngModel)]="bookingForm.name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-phone">Số điện thoại</label>
+                            <input type="tel" id="booking-phone" [(ngModel)]="bookingForm.phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-email">Email</label>
+                            <input type="email" id="booking-email" [(ngModel)]="bookingForm.email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-date">Ngày khởi hành</label>
+                            <input type="date" id="booking-date" [(ngModel)]="bookingForm.date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-adults">Số người lớn</label>
+                            <select id="booking-adults" [(ngModel)]="bookingForm.adults" name="adults" (ngModelChange)="updateBookingPrice()">
+                                <option value="1">1 người</option>
+                                <option value="2">2 người</option>
+                                <option value="3">3 người</option>
+                                <option value="4">4 người</option>
+                                <option value="5">5 người</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-children">Số trẻ em</label>
+                            <select id="booking-children" [(ngModel)]="bookingForm.children" name="children" (ngModelChange)="updateBookingPrice()">
+                                <option value="0">0 trẻ em</option>
+                                <option value="1">1 trẻ em</option>
+                                <option value="2">2 trẻ em</option>
+                                <option value="3">3 trẻ em</option>
+                            </select>
+                        </div>
+                    </form>
+
+                    <div class="booking-summary">
+                        <div class="price-breakdown">
+                            <span>Người lớn (<span>{{bookingForm.adults}}</span> x <span>{{formatPrice(adultPrice)}}</span>):</span>
+                            <span>{{formatPrice(adultsTotal)}}</span>
+                        </div>
+                        <div class="price-breakdown">
+                            <span>Trẻ em (<span>{{bookingForm.children}}</span> x <span>{{formatPrice(childPrice)}}</span>):</span>
+                            <span>{{formatPrice(childrenTotal)}}</span>
+                        </div>
+                        <div class="total-price">
+                            <span>Tổng cộng:</span>
+                            <span>{{formatPrice(totalPrice)}}</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="book-now-btn" [disabled]="isBooking" (click)="submitBooking()">
+                        <i *ngIf="isBooking" class="fas fa-spinner fa-spin"></i>
+                        <span *ngIf="!isBooking"><i class="fas fa-credit-card"></i> Đặt tour ngay</span>
+                        <span *ngIf="isBooking">Đang xử lý...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

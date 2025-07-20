@@ -1,0 +1,111 @@
+<div class="about-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Về chúng tôi</h1>
+      <p class="hero-subtitle">
+        Khám phá Việt Nam cùng SafeTours - Nơi chia sẻ những trải nghiệm du lịch tuyệt vời và hướng dẫn du lịch chuyên sâu
+      </p>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop" 
+           alt="Cảnh đẹp Việt Nam">
+    </div>
+  </section>
+
+  <!-- Company Story -->
+  <section class="story-section">
+    <div class="container">
+      <div class="story-content">
+        <div class="story-text">
+          <h2>Câu chuyện của chúng tôi</h2>
+          <p>
+            SafeTours được thành lập vào năm 2020 với mục tiêu trở thành nguồn thông tin du lịch 
+            đáng tin cậy nhất cho du khách Việt Nam. Chúng tôi không chỉ đơn thuần là một trang web du lịch, 
+            mà là người bạn đồng hành chia sẻ kinh nghiệm, mẹo hay và những câu chuyện du lịch thú vị.
+          </p>
+          <p>
+            Với niềm đam mê khám phá và chia sẻ, chúng tôi cam kết mang đến những bài viết chất lượng cao, 
+            hướng dẫn chi tiết và những tour du lịch được tuyển chọn kỹ càng. Từ những điểm đến nổi tiếng 
+            đến những góc ẩn mình chưa được khám phá, chúng tôi giúp bạn tìm ra những trải nghiệm tuyệt vời nhất.
+          </p>
+        </div>
+        <div class="story-stats">
+          <div class="stat-item">
+            <span class="stat-number">500+</span>
+            <span class="stat-label">Bài viết du lịch</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">100+</span>
+            <span class="stat-label">Điểm đến</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">5</span>
+            <span class="stat-label">Năm kinh nghiệm</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission & Vision -->
+  <section class="mission-section">
+    <div class="container">
+      <div class="mission-grid">
+        <div class="mission-card">
+          <div class="mission-icon">🎯</div>
+          <h3>Sứ mệnh</h3>
+          <p>
+            Trở thành nguồn cảm hứng và thông tin du lịch hàng đầu, giúp mọi người khám phá 
+            vẻ đẹp của Việt Nam và thế giới thông qua những bài viết chất lượng và hướng dẫn 
+            chi tiết từ kinh nghiệm thực tế.
+          </p>
+        </div>
+        <div class="mission-card">
+          <div class="mission-icon">👁️</div>
+          <h3>Tầm nhìn</h3>
+          <p>
+            Xây dựng cộng đồng du lịch năng động, nơi mọi người có thể chia sẻ kinh nghiệm, 
+            học hỏi lẫn nhau và cùng nhau khám phá những điều kỳ diệu của hành trình du lịch.
+          </p>
+        </div>
+        <div class="mission-card">
+          <div class="mission-icon">💎</div>
+          <h3>Giá trị cốt lõi</h3>
+          <p>
+            Chất lượng nội dung, trải nghiệm thực tế, chia sẻ chân thành và hỗ trợ tận tình 
+            là những giá trị cốt lõi định hướng mọi hoạt động của chúng tôi.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What We Offer -->
+  <section class="what-we-do-section">
+    <div class="container">
+      <h2 class="section-title">Chúng tôi cung cấp gì?</h2>
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let feature of features">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Khám phá cùng chúng tôi ngay hôm nay</h2>
+        <p>Tham gia cộng đồng du lịch của chúng tôi để không bỏ lỡ những trải nghiệm tuyệt vời</p>
+        <div class="cta-buttons">
+          <button class="btn btn-primary" (click)="viewBlog()">Đọc Blog</button>
+          <button class="btn btn-secondary" (click)="viewTours()">Xem Tours</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

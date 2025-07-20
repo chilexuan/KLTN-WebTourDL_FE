@@ -1,0 +1,218 @@
+<!-- src/app/features/user-profile/user-profile.component.html -->
+<div class="user-profile-container">
+  <div class="profile-header">
+    <div class="header-content">
+      <h1 class="page-title">Thông tin cá nhân</h1>
+      <p class="page-subtitle">Cập nhật và quản lý thông tin tài khoản của bạn</p>
+    </div>
+  </div>
+
+  <div class="profile-content">
+    @if (errorMessage()) {
+      <div class="alert alert-error">
+        <i class="icon-error"></i>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <div class="profile-card">
+      <form [formGroup]="userProfileForm" (ngSubmit)="onSubmit()" class="profile-form">
+        <!-- Basic Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">Thông tin cơ bản</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="username" class="form-label">
+                Tên đăng nhập 
+                <span class="required">*</span>
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="username"
+                  formControlName="username"
+                  placeholder="Tên đăng nhập"
+                  class="form-input"
+                  [class.error]="username?.touched && username?.invalid"
+                  readonly
+                />
+                <i class="input-icon icon-user"></i>
+              </div>
+              @if (username?.touched && username?.invalid) {
+                <div class="field-error">
+                  @if (username?.errors?.['required']) {
+                    <span>Tên đăng nhập là bắt buộc</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="role" class="form-label">
+                Vai trò 
+                <span class="required">*</span>
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="role"
+                  formControlName="role"
+                  placeholder="Vai trò"
+                  class="form-input"
+                  [class.error]="role?.touched && role?.invalid"
+                  readonly
+                />
+                <i class="input-icon icon-shield"></i>
+              </div>
+              @if (role?.touched && role?.invalid) {
+                <div class="field-error">
+                  @if (role?.errors?.['required']) {
+                    <span>Vai trò là bắt buộc</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">
+              Email 
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                placeholder="Nhập địa chỉ email"
+                class="form-input"
+                [class.error]="email?.touched && email?.invalid"
+              />
+              <i class="input-icon icon-mail"></i>
+            </div>
+            @if (email?.touched && email?.invalid) {
+              <div class="field-error">
+                @if (email?.errors?.['required']) {
+                  <span>Email là bắt buộc</span>
+                }
+                @if (email?.errors?.['email']) {
+                  <span>Định dạng email không hợp lệ</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Password Section -->
+        <div class="form-section">
+          <h3 class="section-title">Đổi mật khẩu</h3>
+          <p class="section-subtitle">Để trống nếu không muốn đổi mật khẩu</p>
+
+          <div class="form-group">
+            <label for="currentPassword" class="form-label">
+              Mật khẩu hiện tại
+              @if (newPassword?.value) {
+                <span class="required">*</span>
+              }
+            </label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="currentPassword"
+                formControlName="currentPassword"
+                placeholder="Nhập mật khẩu hiện tại"
+                class="form-input"
+                [class.error]="currentPassword?.touched && currentPassword?.invalid"
+              />
+              <i class="input-icon icon-lock"></i>
+            </div>
+            @if (currentPassword?.touched && currentPassword?.invalid) {
+              <div class="field-error">
+                @if (currentPassword?.errors?.['required']) {
+                  <span>Mật khẩu hiện tại là bắt buộc khi đổi mật khẩu</span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newPassword" class="form-label">Mật khẩu mới</label>
+              <div class="input-wrapper">
+                <input
+                  type="password"
+                  id="newPassword"
+                  formControlName="newPassword"
+                  placeholder="Nhập mật khẩu mới"
+                  class="form-input"
+                  [class.error]="newPassword?.touched && newPassword?.invalid"
+                />
+                <i class="input-icon icon-key"></i>
+              </div>
+              @if (newPassword?.touched && newPassword?.invalid) {
+                <div class="field-error">
+                  @if (newPassword?.errors?.['minlength']) {
+                    <span>Mật khẩu phải có ít nhất 6 ký tự</span>
+                  }
+                  @if (newPassword?.errors?.['pattern']) {
+                    <span>Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường và 1 số</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+              <div class="input-wrapper">
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  formControlName="confirmPassword"
+                  placeholder="Nhập lại mật khẩu mới"
+                  class="form-input"
+                  [class.error]="confirmPassword?.touched && confirmPassword?.invalid"
+                />
+                <i class="input-icon icon-check"></i>
+              </div>
+              @if (confirmPassword?.touched && confirmPassword?.invalid) {
+                <div class="field-error">
+                  @if (confirmPassword?.errors?.['mismatch']) {
+                    <span>Mật khẩu xác nhận không khớp</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button 
+            type="button" 
+            class="btn btn-secondary"
+            (click)="resetForm()"
+            [disabled]="isLoading()"
+          >
+            <i class="btn-icon icon-refresh"></i>
+            Đặt lại
+          </button>
+          
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="isLoading() || userProfileForm.invalid"
+          >
+            @if (isLoading()) {
+              <i class="btn-icon icon-loading"></i>
+              <span>Đang lưu...</span>
+            } @else {
+              <i class="btn-icon icon-save"></i>
+              <span>Lưu thay đổi</span>
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

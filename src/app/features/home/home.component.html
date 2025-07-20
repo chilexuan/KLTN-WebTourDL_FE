@@ -1,0 +1,260 @@
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-slider">
+      <div class="hero-slide">
+        <div class="slide-image" style="background-image: url('https://cdn2.ivivu.com/2022/07/21/12/ivivu-cao-nguyen-genting-750x460.gif');">
+          <div class="overlay"></div>
+        </div>
+        <div class="container">
+          <div class="slide-content">
+            <h1>Khám phá những điểm đến tuyệt vời</h1>
+            <p>Trải nghiệm những tour du lịch đẳng cấp, an toàn và đáng nhớ</p>
+            <div class="slide-buttons">
+              <a routerLink="/tours" class="btn btn-primary">Khám Phá Tours</a>
+              <a routerLink="/contact" class="btn btn-outline">Liên Hệ</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="search-form">
+      <div class="container">
+        <div class="search-form-wrapper">
+          <h3>Tìm kiếm tour</h3>
+          <form>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Điểm đến</label>
+                <input type="text" placeholder="Bạn muốn đi đâu?">
+              </div>
+              <div class="form-group">
+                <label>Ngày khởi hành</label>
+                <input type="date">
+              </div>
+              <div class="form-group">
+                <label>Loại Tour</label>
+                <select>
+                  <option value="">Tất cả</option>
+                  <option value="beach">Biển</option>
+                  <option value="mountain">Núi</option>
+                  <option value="city">Thành phố</option>
+                  <option value="adventure">Mạo hiểm</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Giá</label>
+                <select>
+                  <option value="">Tất cả</option>
+                  <option value="1">Dưới 2 triệu</option>
+                  <option value="2">2-5 triệu</option>
+                  <option value="3">5-10 triệu</option>
+                  <option value="4">Trên 10 triệu</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <button type="submit">Tìm kiếm</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <div class="features-list">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-map-marked-alt"></i>
+          </div>
+          <h3>Điểm đến đa dạng</h3>
+          <p>Khám phá hàng trăm điểm đến hấp dẫn trên khắp Việt Nam và thế giới.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>An toàn tuyệt đối</h3>
+          <p>Ưu tiên sự an toàn của khách hàng trong mọi chuyến đi.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-hand-holding-usd"></i>
+          </div>
+          <h3>Giá cả hợp lý</h3>
+          <p>Cam kết mang đến trải nghiệm tốt nhất với mức giá phải chăng.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h3>Hỗ trợ 24/7</h3>
+          <p>Đội ngũ hỗ trợ luôn sẵn sàng giúp đỡ bạn mọi lúc, mọi nơi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Popular Tours Section -->
+  <section class="popular-tours">
+    <div class="container">
+      <div class="section-header">
+        <h2>Tour nổi bật</h2>
+        <p>Khám phá những tour du lịch được yêu thích nhất</p>
+      </div>
+      <div class="tours-grid">
+        @for (tour of popularTours; track tour.id) {
+        <app-tour-card [tour]="tour" (favoriteChanged)="onFavoriteChanged($event)"></app-tour-card>
+        }
+      </div>
+      <div class="section-footer">
+        <a routerLink="/tours" class="btn btn-outline">Xem tất cả</a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Destination Section -->
+  <section class="destinations">
+    <div class="container">
+      <div class="section-header">
+        <h2>Điểm đến phổ biến</h2>
+        <p>Khám phá những điểm đến nổi tiếng của Việt Nam</p>
+      </div>
+      <div class="destinations-grid">
+        <div class="destination-item">
+          <div class="destination-image">
+            <img src="https://cdn2.ivivu.com/2025/02/11/18/canh-phuc-cung-ivv-360x225.gif" alt="Hạ Long">
+            <div class="overlay"></div>
+          </div>
+          <div class="destination-content">
+            <h3>Hạ Long</h3>
+            <span>8 tours</span>
+            <a href="#" class="btn-link">Khám phá <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <div class="destination-item">
+          <div class="destination-image">
+            <img src="https://cdn2.ivivu.com/2025/04/10/10/thuong-hai-ivv-1-360x225.gif" alt="Đà Nẵng">
+            <div class="overlay"></div>
+          </div>
+          <div class="destination-content">
+            <h3>Đà Nẵng</h3>
+            <span>12 tours</span>
+            <a href="#" class="btn-link">Khám phá <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <div class="destination-item">
+          <div class="destination-image">
+            <img src="https://cdn2.ivivu.com/2025/04/15/16/bali-ivv-360x225.gif" alt="Phú Quốc">
+            <div class="overlay"></div>
+          </div>
+          <div class="destination-content">
+            <h3>Phú Quốc</h3>
+            <span>7 tours</span>
+            <a href="#" class="btn-link">Khám phá <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <div class="destination-item">
+          <div class="destination-image">
+            <img src="https://cdn2.ivivu.com/2021/03/04/10/ivivu-vinh-hy-bia-360x225.gif" alt="Đà Lạt">
+            <div class="overlay"></div>
+          </div>
+          <div class="destination-content">
+            <h3>Đà Lạt</h3>
+            <span>9 tours</span>
+            <a href="#" class="btn-link">Khám phá <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Testimonials Section -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <h2>Khách hàng nói gì về chúng tôi</h2>
+        <p>Trải nghiệm và cảm nhận từ những khách hàng đã sử dụng dịch vụ</p>
+      </div>
+      <div class="testimonial-grid">
+        @for (testimonial of testimonials; track testimonial.id) {
+        <app-testimonial [testimonial]="testimonial"></app-testimonial>
+        }
+      </div>
+    </div>
+  </section>
+  
+  <!-- Newsletter Section -->
+  <app-newsletter backgroundImage="https://via.placeholder.com/1920x800"></app-newsletter>
+  
+  <!-- Blog Section -->
+  <section class="blog">
+    <div class="container">
+      <div class="section-header">
+        <h2>Bài viết mới nhất</h2>
+        <p>Cập nhật thông tin du lịch, điểm đến và trải nghiệm mới nhất</p>
+      </div>
+      <div class="blog-grid">
+        <div class="blog-item">
+          <div class="blog-image">
+            <img src="https://cdn2.ivivu.com/2025/04/15/11/sunset-ivv-360x225.gif" alt="Blog 1">
+            <div class="blog-date">
+              <span class="day">15</span>
+              <span class="month">Th4</span>
+            </div>
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta">
+              <span><i class="fas fa-user"></i> Admin</span>
+              <span><i class="fas fa-comments"></i> 5 Bình luận</span>
+            </div>
+            <h3><a href="#">Top 10 địa điểm du lịch mùa hè không thể bỏ qua</a></h3>
+            <p>Khám phá những điểm đến tuyệt vời nhất cho kỳ nghỉ hè của bạn...</p>
+            <a href="#" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <div class="blog-item">
+          <div class="blog-image">
+            <img src="https://cdn2.ivivu.com/2025/05/05/11/lake-como-ivvv-360x225.gif" alt="Blog 2">
+            <div class="blog-date">
+              <span class="day">10</span>
+              <span class="month">Th4</span>
+            </div>
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta">
+              <span><i class="fas fa-user"></i> Admin</span>
+              <span><i class="fas fa-comments"></i> 3 Bình luận</span>
+            </div>
+            <h3><a href="#">Kinh nghiệm du lịch tiết kiệm cho sinh viên</a></h3>
+            <p>Những mẹo hay giúp bạn có chuyến đi đáng nhớ với ngân sách hạn chế...</p>
+            <a href="#" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <div class="blog-item">
+          <div class="blog-image">
+            <img src="https://cdn2.ivivu.com/2019/09/13/16/ivivu-giethoorn8-360x225.jpg" alt="Blog 3">
+            <div class="blog-date">
+              <span class="day">05</span>
+              <span class="month">Th4</span>
+            </div>
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta">
+              <span><i class="fas fa-user"></i> Admin</span>
+              <span><i class="fas fa-comments"></i> 7 Bình luận</span>
+            </div>
+            <h3><a href="#">5 trải nghiệm ẩm thực không thể bỏ lỡ khi du lịch miền Trung</a></h3>
+            <p>Những món ăn đặc sản, quán ăn nổi tiếng bạn nhất định phải thử...</p>
+            <a href="#" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="section-footer">
+        <a routerLink="/blog" class="btn btn-outline">Xem tất cả</a>
+      </div>
+    </div>
+  </section>

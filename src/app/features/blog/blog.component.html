@@ -1,0 +1,76 @@
+<section class="blog-page">
+  <!-- Hero Section -->
+  <section class="blog-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="section-header">
+        <h1>Blog Du Lịch SafeTours</h1>
+        <p>Khám phá những bài viết mới nhất về điểm đến, kinh nghiệm du lịch, và hơn thế nữa!</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="search-bar">
+      <div class="search-input">
+        <input
+          type="text"
+          [value]="keyword()"
+          (input)="onInputChange($event)"
+          (keyup.enter)="onSearch()"
+          placeholder="Tìm kiếm bài viết..."
+        />
+        @if (keyword()) {
+          <button class="clear-btn" (click)="onClearSearch()">✕</button>
+        }
+      </div>
+      <button class="search-btn" (click)="onSearch()" [disabled]="isSearching()">
+        <i class="fas fa-search"></i> Tìm kiếm
+      </button>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="error-message">{{ errorMessage() }}</div>
+    }
+
+    <div class="blog-grid-wrapper">
+      <div class="blog-grid">
+        @for (article of articles(); track article.id) {
+          <div class="blog-item">
+            <div class="blog-image">
+              <img [src]="article.image_url || 'https://via.placeholder.com/400x300'" [alt]="article.title">
+              <div class="blog-date">
+                @if (article.published_at) {
+                  <span class="day">{{ article.published_at | date: 'dd' }}</span>
+                  <span class="month">{{ article.published_at | date: 'MMM' }}</span>
+                } @else {
+                  <span class="day">N/A</span>
+                  <span class="month"></span>
+                }
+              </div>
+            </div>
+            <div class="blog-content">
+              <div class="blog-meta">
+                <span><i class="fas fa-user"></i> {{ article.author.username }}</span>
+                <span><i class="fas fa-comments"></i> {{ article.comment_count }} Bình luận</span>
+              </div>
+              <h3><a [routerLink]="['/blog', article.id]">{{ article.title }}</a></h3>
+              <p>{{ article.content | slice:0:150 }}...</p>
+              <a [routerLink]="['/blog', article.id]" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        } @empty {
+          @if (!isSearching()) {
+            <p>Chưa có bài viết nào.</p>
+          } @else {
+            <p>Đang tìm kiếm...</p>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="section-footer">
+      <button class="btn btn-outline" disabled>Xem thêm</button>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,111 @@
+<section class="blog-detail">
+  <div class="container">
+    @if (errorMessage()) {
+      <div class="error-message">{{ errorMessage() }}</div>
+    }
+    @if (successMessage()) {
+      <div class="success-message">{{ successMessage() }}</div>
+    }
+    @if (article()) {
+      <div class="blog-header">
+        <h1>{{ article()!.title }}</h1>
+        <div class="blog-meta">
+          <span>{{ article()!.author.username }}</span>
+          @if (article()!.published_at) {
+            <span>{{ article()!.published_at | date: 'dd MMM yyyy' }}</span>
+          } @else {
+            <span>Chưa công bố</span>
+          }
+          <span>{{ article()!.comment_count }} Bình luận</span>
+        </div>
+      </div>
+      <div class="blog-image">
+        <img [src]="article()!.image_url || 'https://via.placeholder.com/800x400'" [alt]="article()!.title">
+      </div>
+      <div class="blog-content">
+        <p>{{ article()!.content }}</p>
+      </div>
+      <div class="comments-section">
+        <h2>Bình luận ({{ article()!.comment_count }})</h2>
+        @if (loadingComments()) {
+          <p>Đang tải...</p>
+        } @else if (comments().length > 0) {
+          <div class="comment-list">
+            @for (comment of comments(); track comment.id) {
+              <div class="comment-item">
+                @if (editingCommentId() !== comment.id) {
+                  <div class="comment-header">
+                    <div class="comment-info">
+                      <span class="username">{{ comment.user.username }}</span>
+                      <span class="comment-date">{{ comment.created_at | date: 'dd MMM yyyy, HH:mm' }}</span>
+                      @if (comment.created_at !== comment.updated_at) {
+                        <span class="edited-info">(Chỉnh sửa: {{ comment.updated_at | date: 'dd MMM yyyy, HH:mm' }})</span>
+                      }
+                    </div>
+                    @if (comment.user.id === currentUserId()) {
+                      <div class="comment-menu">
+                        <button class="menu-toggle" (click)="toggleCommentMenu(comment.id)" [class.active]="activeMenuId() === comment.id">
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                        </button>
+                        @if (activeMenuId() === comment.id) {
+                          <div class="dropdown-menu">
+                            <button class="menu-item edit" (click)="startEditComment(comment)">
+                              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="m18.5 2.5 4 4L12 17l-4 1 1-4L18.5 2.5z"></path>
+                              </svg>
+                              Sửa
+                            </button>
+                            <button class="menu-item delete" (click)="deleteComment(comment.id)">
+                              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3,6 5,6 21,6"></polyline>
+                                <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+                              </svg>
+                              Xóa
+                            </button>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                  <p class="comment-content">{{ comment.content }}</p>
+                } @else {
+                  <div class="comment-form">
+                    <textarea [(ngModel)]="editingContent" placeholder="Chỉnh sửa bình luận..." rows="4"></textarea>
+                    <div class="form-actions">
+                      <button class="btn btn-primary" (click)="updateComment()" [disabled]="!isEditingCommentValid">Cập nhật</button>
+                      <button class="btn btn-secondary" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+          @if (comments().length < totalComments()) {
+            <div class="text-center">
+              <button class="btn btn-outline-primary" (click)="loadMoreComments()">Xem thêm</button>
+            </div>
+          } @else if (comments().length > 0) {
+            <div class="text-center">Đã hết bình luận.</div>
+          }
+        } @else {
+          <p>Chưa có bình luận.</p>
+        }
+        @if (authService.isLoggedIn()) {
+          <div class="comment-form">
+            <textarea [(ngModel)]="newComment" placeholder="Viết bình luận..." rows="4"></textarea>
+            <div class="form-actions">
+              <button class="btn btn-primary" (click)="onSubmitComment()" [disabled]="!isCommentValid">Gửi</button>
+            </div>
+          </div>
+        } @else {
+          <p><a routerLink="/login">Đăng nhập</a> để bình luận.</p>
+        }
+      </div>
+    } @else {
+      <p>Đang tải bài viết...</p>
+    }
+  </div>
+</section>
