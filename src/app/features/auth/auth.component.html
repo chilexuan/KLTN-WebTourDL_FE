@@ -129,7 +129,21 @@
           @if (passwordInput.errors?.['minlength']) { Mật khẩu phải có ít nhất 6 ký tự }
         </div>
       }
-      <a href="#">Quên mật khẩu?</a>
+      <a href="#" (click)="onForgotPassword()">Quên mật khẩu?</a>
+      @if (showResendAfterLogin) {
+        <input
+          type="email"
+          placeholder="Email để gửi lại xác minh"
+          [(ngModel)]="resendEmail"
+          name="resendEmail"
+          required
+          #resendEmailInput="ngModel"
+        />
+        @if (resendEmailInput.invalid && (resendEmailInput.dirty || resendEmailInput.touched)) {
+          <div class="error-message">Email là bắt buộc</div>
+        }
+        <button type="button" (click)="onResendVerification(resendEmail)">Gửi lại email xác minh</button>
+      }
       <button type="submit" [disabled]="isLoading || signInForm.invalid">
         {{ isLoading ? 'Đang đăng nhập...' : 'Đăng Nhập' }}
       </button>
@@ -151,4 +165,12 @@
       </div>
     </div>
   </div>
+  <!-- Verify Email Component -->
+  @if (showVerifyEmail) {
+    <app-verify-email
+      [email]="isSignUp ? signUpData.email : resendEmail"
+      (verified)="onVerified()"
+      (closed)="onVerifyClosed()"
+    ></app-verify-email>
+  }
 </div>

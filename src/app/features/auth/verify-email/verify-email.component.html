@@ -1,0 +1,28 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <span class="close-button" (click)="onClose()">&times;</span>
+    <h2>Xác thực email</h2>
+    @if (errorMessage) {
+      <div class="error-message">{{ errorMessage }}</div>
+    }
+    <p>Nhập mã OTP 5 chữ số được gửi đến {{ email }}</p>
+    <form #otpForm="ngForm" (ngSubmit)="onVerifyOtp(otpForm)">
+      <input
+        type="text"
+        placeholder="Nhập mã OTP"
+        [(ngModel)]="otpCode"
+        name="otpCode"
+        required
+        maxlength="5"
+        #otpInput="ngModel"
+      />
+      @if (otpInput.invalid && (otpInput.dirty || otpInput.touched)) {
+        <div class="error-message">Mã OTP là bắt buộc</div>
+      }
+      <button type="submit" [disabled]="isLoading || otpForm.invalid">
+        {{ isLoading ? 'Đang xác thực...' : 'Xác thực mã' }}
+      </button>
+    </form>
+    <button type="button" (click)="onResendVerification()">Gửi lại mã</button>
+  </div>
+</div>

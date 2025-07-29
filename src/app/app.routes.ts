@@ -10,6 +10,7 @@ import { SearchComponent } from './features/search/search.component';
 import { UserProfileComponent } from './features/user-profile/user-profile.component';
 import { DashboardComponent } from './features/admin/dashboard.component'; // Import DashboardComponent
 import { AdminGuard } from './core/guards/auth.guard';
+// import { VerifyEmailComponent } from './features/auth/verify-email/verify-email.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,7 +21,10 @@ export const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'search', component: SearchComponent },
   { path: 'auth', component: AuthComponent },
+  // { path: 'verify-email', component: VerifyEmailComponent },
+  { path: '', redirectTo: '/auth?mode=signin', pathMatch: 'full' },
   { path: 'user-profile', component: UserProfileComponent },
+
   { path: 'admin', component: DashboardComponent, canActivate: [AdminGuard] },
   {
     path: 'admin/dashboard',

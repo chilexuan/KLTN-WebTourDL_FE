@@ -22,14 +22,20 @@ export interface RegisterDto {
   email: string;
   password: string;
 }
+
 export interface UpdateUserDto {
   email?: string;
   role?: string;
   password?: string;
 }
+
 export interface CreateUserDto {
   username: string;
   email: string;
   password: string;
   role: string;
+}
+
+export interface MessageResponse {
+  message: string;
 }

@@ -4,8 +4,8 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { User, LoginResponse, LoginDto, RegisterDto } from '../../shared/models/user.model';
 import { ToastrService } from 'ngx-toastr';
+import { User, LoginResponse, LoginDto, RegisterDto, MessageResponse } from '../../shared/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,15 +31,21 @@ export class AuthService {
       this.refreshToken = localStorage.getItem('refreshToken');
       const user = localStorage.getItem('currentUser');
       if (user) {
-        console.log('Loaded currentUser from localStorage:', JSON.parse(user));
-        this.currentUserSubject.next(JSON.parse(user));
+        try {
+          this.currentUserSubject.next(JSON.parse(user));
+        } catch (error) {
+          console.error('Error parsing currentUser:', error);
+          localStorage.removeItem('currentUser');
+        }
       }
     }
   }
 
-  register(dto: RegisterDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register`, dto).pipe(
-      tap(() => this.toastr.success('Đăng ký thành công! Vui lòng đăng nhập.')),
+  register(dto: RegisterDto): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.baseUrl}/register`, dto).pipe(
+      tap((response) => {
+        this.toastr.success(response.message || 'Đăng ký thành công. Vui lòng kiểm tra email.');
+      }),
       catchError((err) => {
         this.toastr.error(err.error.message || 'Đăng ký thất bại.');
         return throwError(() => new Error(err.error.message || 'Đăng ký thất bại.'));
@@ -48,45 +54,42 @@ export class AuthService {
   }
 
   login(dto: LoginDto): Observable<LoginResponse> {
-    return this.http
-      .post<LoginResponse>(`${this.baseUrl}/login`, dto)
-      .pipe(
-        tap((response) => {
-          console.log('Login response:', response);
-          this.accessToken = response.accessToken;
-          this.refreshToken = response.refreshToken || null;
-          if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('accessToken', response.accessToken);
-            if (response.refreshToken) {
-              localStorage.setItem('refreshToken', response.refreshToken);
-            }
+    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, dto).pipe(
+      tap((response) => {
+        this.accessToken = response.accessToken;
+        this.refreshToken = response.refreshToken || null;
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('accessToken', response.accessToken);
+          if (response.refreshToken) {
+            localStorage.setItem('refreshToken', response.refreshToken);
           }
-          this.getProfile().subscribe({
-            next: (user: User) => {
-              console.log('Profile data:', user);
-              this.currentUserSubject.next(user);
-              if (isPlatformBrowser(this.platformId)) {
-                localStorage.setItem('currentUser', JSON.stringify(user));
-              }
-              this.toastr.success('Đăng nhập thành công!');
-              if (user.role === 'admin') {
-                this.router.navigate(['/admin/dashboard']);
-              } else {
-                this.router.navigate(['/']);
-              }
-            },
-            error: (err: HttpErrorResponse) => {
-              console.error('Get profile error:', err);
-              this.toastr.error('Không thể lấy thông tin người dùng.');
-              this.logout();
-            },
-          });
-        }),
-        catchError((err) => {
-          this.toastr.error(err.error.message || 'Đăng nhập thất bại.');
-          return throwError(() => new Error(err.error.message || 'Đăng nhập thất bại.'));
-        })
-      );
+        }
+        this.getProfile().subscribe({
+          next: (user: User) => {
+            this.currentUserSubject.next(user);
+            if (isPlatformBrowser(this.platformId)) {
+              localStorage.setItem('currentUser', JSON.stringify(user));
+            }
+            this.toastr.success('Đăng nhập thành công!');
+            if (user.role === 'admin') {
+              this.router.navigate(['/admin/dashboard']);
+            } else {
+              this.router.navigate(['/']);
+            }
+          },
+          error: (err: HttpErrorResponse) => {
+            console.error('Get profile error:', err);
+            this.toastr.error('Không thể lấy thông tin người dùng.');
+            this.logout();
+          },
+        });
+      }),
+      catchError((err) => {
+        const errorMsg = err.error.message || 'Đăng nhập thất bại.';
+        this.toastr.error(errorMsg);
+        return throwError(() => new Error(errorMsg));
+      })
+    );
   }
 
   refreshAccessToken(): Observable<{ accessToken: string }> {
@@ -94,26 +97,23 @@ export class AuthService {
       this.logout();
       return throwError(() => new Error('Không có refresh token.'));
     }
-    return this.http
-      .post<{ accessToken: string }>(`${this.baseUrl}/refresh`, { refreshToken: this.refreshToken })
-      .pipe(
-        tap((response) => {
-          this.accessToken = response.accessToken;
-          if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('accessToken', response.accessToken);
-          }
-        }),
-        catchError((err) => {
-          this.toastr.error('Không thể làm mới token.');
-          this.logout();
-          return throwError(() => new Error('Không thể làm mới token.'));
-        })
-      );
+    return this.http.post<{ accessToken: string }>(`${this.baseUrl}/refresh`, { refreshToken: this.refreshToken }).pipe(
+      tap((response) => {
+        this.accessToken = response.accessToken;
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('accessToken', response.accessToken);
+        }
+      }),
+      catchError((err) => {
+        this.toastr.error('Không thể làm mới token.');
+        this.logout();
+        return throwError(() => new Error('Không thể làm mới token.'));
+      })
+    );
   }
 
   getProfile(): Observable<User> {
     const token = this.getAccessToken();
-    console.log('Using accessToken:', token);
     if (!token) {
       return throwError(() => new Error('Không có access token.'));
     }
@@ -126,6 +126,55 @@ export class AuthService {
       catchError((err) => {
         this.toastr.error('Không thể lấy thông tin người dùng.');
         return throwError(() => new Error('Không thể lấy thông tin người dùng.'));
+      })
+    );
+  }
+
+  verifyCode(email: string, code: string): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.baseUrl}/verify-code`, { email, code }).pipe(
+      tap((response) => {
+        this.toastr.success(response.message || 'Xác minh thành công! Mời bạn đăng nhập.');
+      }),
+      catchError((err) => {
+        this.toastr.error(err.error.message || 'Mã không hợp lệ hoặc hết hạn.');
+        return throwError(() => new Error(err.error.message || 'Xác minh thất bại.'));
+      })
+    );
+  }
+
+  resendVerification(email: string): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.baseUrl}/resend-verification`, { email }).pipe(
+      tap((response) => {
+        this.toastr.success(response.message || 'Email xác minh đã được gửi lại!');
+      }),
+      catchError((err) => {
+        this.toastr.error(err.error.message || 'Gửi lại email xác minh thất bại.');
+        return throwError(() => new Error(err.error.message || 'Gửi lại email xác minh thất bại.'));
+      })
+    );
+  }
+
+  forgotPassword(email: string): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.baseUrl}/forgot-password`, { email }).pipe(
+      tap((response) => {
+        this.toastr.success(response.message || 'Link đặt lại mật khẩu đã được gửi đến email của bạn!');
+      }),
+      catchError((err) => {
+        this.toastr.error(err.error.message || 'Yêu cầu đặt lại mật khẩu thất bại.');
+        return throwError(() => new Error(err.error.message || 'Yêu cầu đặt lại mật khẩu thất bại.'));
+      })
+    );
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.baseUrl}/reset-password`, { token, newPassword }).pipe(
+      tap((response) => {
+        this.toastr.success(response.message || 'Mật khẩu đã được đặt lại thành công!');
+        this.router.navigate(['/login']);
+      }),
+      catchError((err) => {
+        this.toastr.error(err.error.message || 'Đặt lại mật khẩu thất bại.');
+        return throwError(() => new Error(err.error.message || 'Đặt lại mật khẩu thất bại.'));
       })
     );
   }
